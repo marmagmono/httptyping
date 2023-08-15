@@ -1,6 +1,6 @@
 import re
 
-import definitiongenerator.fromjson as fj
+import definitiongenerator.model as fj
 
 input = [
     {

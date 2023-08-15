@@ -1,12 +1,12 @@
 import json
 from pathlib import Path
-import definitiongenerator.fromjson as fj
+import definitiongenerator.model as fj
 
-# test_path = "prices_eastus.json"
-test_path = "vm_skus.json"
+test_path = "prices_eastus.json"
+# test_path = "vm_skus.json"
 
 
-def load_test_file(p: Path):
+def load_test_file(p: Path | str):
     with open(p, "r") as f:
         return json.load(f)
 

@@ -1,6 +1,6 @@
 import unittest
 import re
-import definitiongenerator.fromjson as fj
+import definitiongenerator.model as fj
 
 
 class Test_SnakeCaseAndCamelCaseConversions(unittest.TestCase):
