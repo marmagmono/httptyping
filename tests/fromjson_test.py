@@ -55,7 +55,52 @@ class Test_SnakeCaseAndCamelCaseConversions(unittest.TestCase):
         self.assertEqual("number1234", result)
 
 
-class GatherMappingTests(unittest.TestCase):
+class NewMappingModelTests(unittest.TestCase):
+    def test_int_mapping(self):
+        result = fj.new_mapping_model(10)
+
+        self.assertIsInstance(result, fj.SimpleMapping)
+        self.assertEqual(int, result.value_type)
+        self.assertEqual(0, len(result.string_value_set))
+
+    def test_str_mapping(self):
+        result = fj.new_mapping_model("value")
+
+        self.assertIsInstance(result, fj.SimpleMapping)
+        self.assertEqual(str, result.value_type)
+        self.assertSetEqual(set(["value"]), result.string_value_set)
+
+    def test_bool_True_mapping(self):
+        result = fj.new_mapping_model(True)
+
+        self.assertIsInstance(result, fj.SimpleMapping)
+        self.assertEqual(bool, result.value_type)
+        self.assertEqual(0, len(result.string_value_set))
+
+    def test_bool_False_mapping(self):
+        result = fj.new_mapping_model(False)
+
+        self.assertIsInstance(result, fj.SimpleMapping)
+        self.assertEqual(bool, result.value_type)
+        self.assertEqual(0, len(result.string_value_set))
+
+    def test_float_mapping(self):
+        result = fj.new_mapping_model(10.0)
+
+        self.assertIsInstance(result, fj.SimpleMapping)
+        self.assertEqual(float, result.value_type)
+        self.assertEqual(0, len(result.string_value_set))
+
+    def test_list_of_string_mapping(self):
+        result = fj.new_mapping_model(["first", "second", "third"])
+
+        self.assertIsInstance(result, fj.ListMapping)
+
+        element_mapping = result.element_mapping
+        self.assertIsInstance(element_mapping, fj.SimpleMapping)
+        self.assertEqual(str, element_mapping.value_type)
+        self.assertSetEqual(set(["first", "second", "third"]), result.string_value_set)
+
     def test_list_of_complex_types(self):
         input = [
             {

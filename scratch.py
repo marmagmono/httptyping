@@ -26,5 +26,5 @@ input = [
     },
 ]
 
-result = fj._new_mapping(input)
+result = fj.new_mapping_model(input)
 ...
