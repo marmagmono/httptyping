@@ -56,7 +56,13 @@ class ObjectMapping:
 
 
 ModelMapping = SimpleMapping | ListMapping | ObjectMapping | AlternativesMapping
+"""ModelMapping tries to capture a structure of a JSON object.
 
+ModelMapping is meant to be created from a 'real life' example object
+rather than from a specification, like for instance OpenAPI. It represents
+a rough structure of a JSON object and after some refinement can be used as
+a base for generating a typed model of a JSON object.
+"""
 # mapping:
 # - multiple different types
 # - type is list
