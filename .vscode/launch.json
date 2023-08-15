@@ -9,7 +9,17 @@
             "type": "python",
             "request": "launch",
             "module": "unittest",
-            "args": ["tests/fromjson_test.py"],
+            "args": [
+                "tests/fromjson_test.py"
+            ],
+            "justMyCode": true
+        },
+        {
+            "name": "Python:Scratch",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scratch.py",
+            "console": "integratedTerminal",
             "justMyCode": true
         }
     ]

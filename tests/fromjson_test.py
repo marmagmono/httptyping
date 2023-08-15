@@ -54,5 +54,33 @@ class Test_SnakeCaseAndCamelCaseConversions(unittest.TestCase):
 
         self.assertEqual("number1234", result)
 
+
+class GatherMappingTests(unittest.TestCase):
+    def test_list_of_complex_types(self):
+        input = [
+            {
+                "propA": {
+                    "propB": {"insideB1": "test", "insideB2": "test2"},
+                    "listInA": [
+                        {"name": "A", "value": 10},
+                        {"name": "B", "value": "ii"},
+                    ],
+                }
+            },
+            {
+                "propA": {
+                    "propB": {
+                        "insideB1": "test2222",
+                        "insideB2": "test2ffff",
+                        "insideB3": 9.0,
+                    },
+                    "listInA": [
+                        {"name": "C", "value": 10},
+                    ],
+                }
+            },
+        ]
+
+
 if __name__ == "__main__":
     unittest.main()
