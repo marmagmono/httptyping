@@ -97,7 +97,7 @@ def _new_list_mapping(v: list):
     if len(v) == 0:
         return ListMapping(element_mapping=None)
 
-    element_mapping = _new_object_mapping(v[0])
+    element_mapping = new_mapping_model(v[0])
     for element in v[1:]:
         _update_mapping(element_mapping, element)
 

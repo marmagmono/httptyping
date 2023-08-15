@@ -99,7 +99,7 @@ class NewMappingModelTests(unittest.TestCase):
         element_mapping = result.element_mapping
         self.assertIsInstance(element_mapping, fj.SimpleMapping)
         self.assertEqual(str, element_mapping.value_type)
-        self.assertSetEqual(set(["first", "second", "third"]), result.string_value_set)
+        self.assertSetEqual(set(["first", "second", "third"]), element_mapping.string_value_set)
 
     def test_list_of_complex_types(self):
         input = [
