@@ -127,6 +127,9 @@ def _update_mapping(current_mapping: ModelMapping, v: Any) -> ModelMapping:
     if isinstance(current_mapping, ListMapping):
         if isinstance(v, list):
             if len(v) > 0:
+                if current_mapping.element_mapping is None:
+                    current_mapping.element_mapping = new_mapping_model(v[0])
+
                 for e in v:
                     current_mapping.element_mapping = _update_mapping(
                         current_mapping.element_mapping, e

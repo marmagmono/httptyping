@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from definitiongenerator.fromjson import _gather_types
+import definitiongenerator.fromjson as fj
 
 # test_path = "prices_eastus.json"
 test_path = "vm_skus.json"
@@ -13,6 +13,6 @@ def load_test_file(p: Path):
 
 if __name__ == "__main__":
     test_data = load_test_file(test_path)
-    t = _gather_types(test_data)
+    t = fj.new_mapping_model(test_data)
     ...
 

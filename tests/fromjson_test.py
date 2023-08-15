@@ -140,6 +140,42 @@ class NewMappingModelTests(unittest.TestCase):
         self._assert_simple_mapping(props["boolProp"], bool)
         self.assertEqual(3, len(props))
 
+    def test_empty_list_in_element_mapping(self):
+        result = fj.new_mapping_model(
+            [
+                {'a': []},
+                {'a': [10, 20]}
+            ]
+        )
+
+        self.assertIsInstance(result, fj.ListMapping)
+
+        em: fj.ObjectMapping = result.element_mapping
+        self.assertIsInstance(em, fj.ObjectMapping)
+
+        a_prop: fj.ListMapping = em.properties['a']
+        self.assertIsInstance(a_prop, fj.ListMapping)
+        self._assert_simple_mapping(a_prop.element_mapping, int)
+
+    def test_empty_list_mapping(self):
+        result = fj.new_mapping_model(
+            [
+                {'a': []},
+                {'a': []},
+                {'a': []},
+            ]
+        )
+
+        self.assertIsInstance(result, fj.ListMapping)
+
+        em: fj.ObjectMapping = result.element_mapping
+        self.assertIsInstance(em, fj.ObjectMapping)
+
+        a_prop: fj.ListMapping = em.properties['a']
+        self.assertIsInstance(a_prop, fj.ListMapping)
+        self.assertIsNone(a_prop.element_mapping)
+
+
     def test_list_of_complex_types(self):
         input = [
             {
