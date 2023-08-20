@@ -18,13 +18,16 @@ class _MapperState:
 def _simple_mapping_to_type(
     mapping: m.SimpleMapping, state: _MapperState
 ) -> Tuple[_MapperState, _TypeDescription]:
-    return (state, _TypeDescription(name=str(mapping.value_type)))
+    return (state, _TypeDescription(name=str(mapping.value_type.__name__)))
 
 
 def _object_mapping_to_type(
-    mapping: m.ObjectMapping, state: _MapperState, path: list[str] = []
+    mapping: m.ObjectMapping, state: _MapperState, path: list[str] | None = None
 ) -> Tuple[_MapperState, _TypeDescription]:
     # TODO: Uppercase
+    if path is None:
+        path = []
+
     type_name = f"{path[-1]}Dict" if len(path) > 0 else "MainDict"
     properties = {}
 
@@ -41,7 +44,7 @@ def _object_mapping_to_type(
 
 
 def _list_mapping_to_type(
-    mapping: m.ListMapping, state: _MapperState, path: list[str] = []
+    mapping: m.ListMapping, state: _MapperState, path: list[str] | None = None
 ) -> Tuple[_MapperState, _TypeDescription]:
     if mapping.element_mapping is None:
         return (state, _TypeDescription("?????", is_array=True))
@@ -51,7 +54,7 @@ def _list_mapping_to_type(
 
 
 def _new_type_model(
-    mapping: m.ModelMapping, state: _MapperState, path: list[str] = []
+    mapping: m.ModelMapping, state: _MapperState, path: list[str] | None = None
 ) -> Tuple[_MapperState, _TypeDescription]:
     """Creates type model from model mapping"""
 

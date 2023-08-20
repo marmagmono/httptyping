@@ -17,4 +17,3 @@ if __name__ == "__main__":
     t = fj.new_mapping_model(test_data)
     mm = genjson._new_type_model(t, genjson._MapperState())
     ...
-

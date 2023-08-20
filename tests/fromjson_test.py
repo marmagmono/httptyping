@@ -175,7 +175,6 @@ class NewMappingModelTests(unittest.TestCase):
         self.assertIsInstance(a_prop, fj.ListMapping)
         self.assertIsNone(a_prop.element_mapping)
 
-
     def test_list_of_complex_types(self):
         input = [
             {
@@ -242,10 +241,10 @@ class NewMappingModelTests(unittest.TestCase):
         self._assert_simple_mapping(list_el.properties["value"], int)
 
     def _assert_simple_mapping(
-        self,
-        mapping: fj.ModelMapping,
-        expected_type: type,
-        expected_str_values: list[str] | None = None,
+            self,
+            mapping: fj.ModelMapping,
+            expected_type: type,
+            expected_str_values: list[str] | None = None,
     ):
         self.assertIsInstance(mapping, fj.SimpleMapping)
         self.assertEqual(expected_type, mapping.value_type)
