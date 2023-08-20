@@ -105,10 +105,19 @@ def _simple_mapping_to_type(
 
 
 def _get_type_name(state: _MapperState, path: list[str]):
+    def capitalize(s: str):
+        if len(s) == 0:
+            return s
+
+        if len(s) == 1:
+            return s.upper()
+
+        return s[0].upper() + s[1:]
+
     if len(path) == 0:
         return "MainDict"
 
-    return "".join(path) + "Dict"
+    return "".join((capitalize(p) for p in path)) + "Dict"
     # end = len(path)
     # start = end - 1
     # while start >= 0:
