@@ -5,8 +5,8 @@ from pathlib import Path
 import definitiongenerator.model as fj
 import definitiongenerator.writers as genjson
 
-# test_path = "prices_eastus.json"
-test_path = "vm_skus.json"
+test_path = "prices_eastus.json"
+# test_path = "vm_skus.json"
 
 
 def load_test_file(p: Path | str):

@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass, field
 from typing import IO, Literal, Tuple
 import definitiongenerator.model as m
@@ -38,7 +37,10 @@ def _dump_typed_dict_model(model_state: _MapperState, output: IO[str]):
         indent = 4 * " "
         output.write("\n")
         output.write(f"class {type_description.name}(TypedDict):\n")
-        for property_name, property_type_description, in type_description.properties.items():
+        for (
+            property_name,
+            property_type_description,
+        ) in type_description.properties.items():
             if property_type_description.is_array:
                 property_type = f"list[{property_type_description.name}]"
             else:
