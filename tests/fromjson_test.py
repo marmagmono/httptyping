@@ -1,5 +1,4 @@
 import unittest
-import re
 import definitiongenerator.model as fj
 
 

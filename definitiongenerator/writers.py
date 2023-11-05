@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import IO, Literal, Tuple
+from typing import IO, Literal, Protocol, Tuple
 import definitiongenerator.model as m
 import dataclasses as dc
 
@@ -28,12 +28,26 @@ def convert_to_dict(mapping: m.ModelMapping) -> list[dict]:
 DumpFormat = Literal["TypedDict", "Markdown"]
 
 
-def _dump_typed_dict_model(model_state: _MapperState, output: IO[str]):
-    def print_header(output: IO[str]):
+class _TypeWriterProtocol(Protocol):
+    def initialize(self, found_types: list[_TypeDescription], options: dict):
+        ...
+
+    def print_type(self, type_description: _TypeDescription, output: IO[str]):
+        ...
+
+    def print_header(self, found_types: list[_TypeDescription], output: IO[str]):
+        ...
+
+
+class _PythonTypedDictWriter(_TypeWriterProtocol):
+    def initialize(self, options: dict):
+        ...
+
+    def print_header(self, found_types: list[_TypeDescription], output: IO[str]):
         output.write("from typing import TypedDict\n")
         output.write("\n")
 
-    def print_type(type_description: _TypeDescription, output: IO[str]):
+    def print_type(self, type_description: _TypeDescription, output: IO[str]):
         indent = 4 * " "
         output.write("\n")
         output.write(f"class {type_description.name}(TypedDict):\n")
@@ -50,14 +64,15 @@ def _dump_typed_dict_model(model_state: _MapperState, output: IO[str]):
 
         output.write("\n")
 
-    print_header(output)
 
-    for found_type in model_state.found_types:
-        print_type(found_type, output)
+class _MarkdownWriter(_TypeWriterProtocol):
+    def initialize(self, options: dict):
+        ...
 
+    def print_header(self, found_types: list[_TypeDescription], output: IO[str]):
+        ...
 
-def _dump_markdown(model_state: _MapperState, output: IO[str]):
-    def print_type(type_description: _TypeDescription, output: IO[str]):
+    def print_type(self, type_description: _TypeDescription, output: IO[str]):
         output.write(f"# {type_description.name} \n")
         for (
             property_name,
@@ -74,24 +89,27 @@ def _dump_markdown(model_state: _MapperState, output: IO[str]):
                     output.write(f"  - {sv}\n")
         output.write("\n")
 
-    for found_type in model_state.found_types:
-        print_type(found_type, output)
-
 
 def dump_model(
-    mapping: m.ModelMapping, output: IO[str], *, dump_format: DumpFormat = "TypedDict"
+    mapping: m.ModelMapping,
+    output: IO[str],
+    *,
+    dump_format: DumpFormat = "TypedDict",
+    options: dict | None = None,
 ):
     state = _MapperState()
-    final_state, model = _new_type_model(mapping, state, [])
-    if dump_format == "TypedDict":
-        _dump_typed_dict_model(final_state, output)
-        return
+    type_model, _ = _new_type_model(mapping, state, [])
 
-    elif dump_format == "Markdown":
-        _dump_markdown(final_state, output)
-        return
+    writers = {"TypedDict": _PythonTypedDictWriter(), "Markdown": _MarkdownWriter()}
 
-    raise ValueError(f"Unexpected dump_format={dump_format}")
+    selected_writer: _TypeWriterProtocol = writers[dump_format]
+    if options is not None:
+        selected_writer.initialize(options=options)
+
+    selected_writer.print_header(type_model.found_types, output)
+
+    for found_type in type_model.found_types:
+        selected_writer.print_type(found_type, output)
 
 
 def _simple_mapping_to_type(
