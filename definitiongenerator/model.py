@@ -93,6 +93,13 @@ def _new_object_mapping(v: dict):
 
 
 def _update_mapping(current_mapping: ModelMapping, v: Any) -> ModelMapping:
+    """
+    The current mapping is mapping created using sample objects observed before.
+    The 'v' object is another sample of an object at the same hierarchy level
+        as the objects used to create the 'current_mapping'. It is possible
+        that new sample contains more properties than the ones observed so far
+        so the mapping might need to be updated.
+    """
     v_type = type(v)
     if isinstance(current_mapping, SimpleMapping):
         if current_mapping.value_type == v_type:
