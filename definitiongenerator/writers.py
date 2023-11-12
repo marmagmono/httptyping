@@ -1,5 +1,6 @@
 from typing import IO, Literal, Protocol, TypedDict
 import definitiongenerator.model as m
+import definitiongenerator.utilities as ut
 
 from definitiongenerator.outputtypemodel import (
     _MapperState,
@@ -95,22 +96,22 @@ class _CSharpWriter(_TypeWriterProtocol):
             output.write("using System.Collections.Generic.List")
 
         # namespace
-        use_new_style_namespace = self.options.get('NewStyleNamespace', False)
-        namespace = self.options['Namespace']
+        use_new_style_namespace = self.options.get("NewStyleNamespace", False)
+        namespace = self.options["Namespace"]
 
         output.write(f"namespace {namespace}")
         if use_new_style_namespace:
-            output.write(';')
+            output.write(";")
 
-        output.write('\n')
+        output.write("\n")
         if not use_new_style_namespace:
-            output.write('{\n')
+            output.write("{\n")
             self.class_indent = 4 * " "
 
     def print_footer(self, found_types: list[_TypeDescription], output: IO[str]):
-        use_new_style_namespace = self.options.get('NewStyleNamespace', False)
+        use_new_style_namespace = self.options.get("NewStyleNamespace", False)
         if not use_new_style_namespace:
-            output.write('}\n')
+            output.write("}\n")
 
     def print_type(self, type_description: _TypeDescription, output: IO[str]):
         method_indent = self.class_indent + 4 * " "
@@ -123,7 +124,12 @@ class _CSharpWriter(_TypeWriterProtocol):
             property_type_description,
         ) in type_description.properties.items():
             type_name = _CSharpWriter._map_property_type(property_type_description)
-            output.write(f"{method_indent}{type_name} {property_name} {{ get; set; }} \n")
+            cs_property_name = ut.to_camel_case(
+                property_name, capitalize_first_letter=True
+            )
+            output.write(
+                f"{method_indent}{type_name} {cs_property_name} {{ get; set; }} \n"
+            )
 
         output.write(f"{self.class_indent}}}\n")
 
@@ -161,7 +167,7 @@ def dump_model(
     writers = {
         "TypedDict": _PythonTypedDictWriter(),
         "Markdown": _MarkdownWriter(),
-        "C#": _CSharpWriter()
+        "C#": _CSharpWriter(),
     }
 
     selected_writer: _TypeWriterProtocol = writers[dump_format]

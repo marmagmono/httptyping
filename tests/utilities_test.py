@@ -38,6 +38,16 @@ class Test_SnakeCaseAndCamelCaseConversions(unittest.TestCase):
 
         self.assertEqual("testSomething", result)
 
+    def test_test_something_to_camel_case_and_capitalize_first_letter(self):
+        result = ut.to_camel_case("test_something", capitalize_first_letter=True)
+
+        self.assertEqual("TestSomething", result)
+
+    def test_testSomething_to_camel_case_and_capitalize_first_letter(self):
+        result = ut.to_camel_case("testSomething", capitalize_first_letter=True)
+
+        self.assertEqual("TestSomething", result)
+
     def test_test_something1_to_camel_case(self):
         result = ut.to_camel_case("_test_something")
 

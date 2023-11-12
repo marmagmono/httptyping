@@ -14,9 +14,9 @@ def to_snake_case(s: str):
     return "".join(generate())
 
 
-def to_camel_case(s: str):
+def to_camel_case(s: str, capitalize_first_letter: bool = False):
     def generate(input_s: str):
-        upper_case_next = False
+        upper_case_next = capitalize_first_letter
         for c in input_s:
             if c == "_":
                 upper_case_next = True
