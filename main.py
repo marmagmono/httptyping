@@ -23,3 +23,11 @@ if __name__ == "__main__":
 
     with open("outtests/test.md", "w") as f:
         mm = genjson.dump_model(t, f, dump_format="Markdown")
+
+    with open("outtests/Test.cs", "w") as f:
+        csOptions: genjson.CSharpWriterOptions = {
+            "Namespace": "Something.TestNamespace",
+            "NewStyleNamespace": False
+        }
+
+        mm = genjson.dump_model(t, f, dump_format="C#", options=csOptions)
