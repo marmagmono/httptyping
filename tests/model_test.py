@@ -52,6 +52,19 @@ class NewMappingModelTests(unittest.TestCase):
         self._assert_simple_mapping(props["boolProp"], bool)
         self.assertEqual(4, len(props))
 
+    def test_object_with_none_value_mapping(self):
+        result = fj.new_mapping_model(
+            {"propA": None, "intProp": 10, "floatProp": 20.0, "boolProp": True}
+        )
+
+        self.assertIsInstance(result, fj.ObjectMapping)
+
+        props = result.properties
+        self._assert_simple_mapping(props["intProp"], int)
+        self._assert_simple_mapping(props["floatProp"], float)
+        self._assert_simple_mapping(props["boolProp"], bool)
+        self.assertEqual(3, len(props))
+
     def test_list_of_string_mapping(self):
         result = fj.new_mapping_model(["first", "second", "third"])
 
@@ -86,6 +99,46 @@ class NewMappingModelTests(unittest.TestCase):
         self._assert_simple_mapping(props["intProp"], int)
         self._assert_simple_mapping(props["boolProp"], bool)
         self.assertEqual(3, len(props))
+
+    def test_list_of_objects_with_none_values_mapping(self):
+        result = fj.new_mapping_model(
+            [
+                {"propA": "A value", "intProp": 100},
+                {"propA": "B value", "intProp": None},
+            ]
+        )
+
+        self.assertIsInstance(result, fj.ListMapping)
+
+        element_mapping: fj.ObjectMapping = result.element_mapping
+        self.assertIsInstance(element_mapping, fj.ObjectMapping)
+
+        props = element_mapping.properties
+        self._assert_simple_mapping(
+            props["propA"], str, ["A value", "B value"]
+        )
+        self._assert_simple_mapping(props["intProp"], int)
+        self.assertEqual(2, len(props))
+
+    def test_list_of_objects_with_first_none_values_mapping(self):
+        result = fj.new_mapping_model(
+            [
+                {"propA": "A value", "intProp": None},
+                {"propA": "B value", "intProp": 100},
+            ]
+        )
+
+        self.assertIsInstance(result, fj.ListMapping)
+
+        element_mapping: fj.ObjectMapping = result.element_mapping
+        self.assertIsInstance(element_mapping, fj.ObjectMapping)
+
+        props = element_mapping.properties
+        self._assert_simple_mapping(
+            props["propA"], str, ["A value", "B value"]
+        )
+        self._assert_simple_mapping(props["intProp"], int)
+        self.assertEqual(2, len(props))
 
     def test_empty_list_in_element_mapping(self):
         result = fj.new_mapping_model(

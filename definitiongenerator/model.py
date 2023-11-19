@@ -56,6 +56,8 @@ def _new_list_mapping(v: list):
 def _new_object_mapping(v: dict):
     property_mappings: dict[str, ModelMapping] = dict()
     for k, v in v.items():
+        if v is None:
+            continue
         property_mappings[k] = new_mapping_model(v)
 
     return ObjectMapping(property_mappings)
@@ -100,6 +102,9 @@ def _update_mapping(current_mapping: ModelMapping, v: Any) -> ModelMapping:
     if isinstance(current_mapping, ObjectMapping):
         if isinstance(v, dict):
             for property_name, property_value in v.items():
+                if property_value is None:
+                    continue
+
                 property_mapping = current_mapping.properties.get(property_name)
                 if property_mapping is not None:
                     _update_mapping(property_mapping, property_value)
