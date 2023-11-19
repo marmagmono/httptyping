@@ -95,6 +95,8 @@ class _CSharpWriter(_TypeWriterProtocol):
         if found_list:
             output.write("using System.Collections.Generic.List")
 
+        output.write("using System.Text.Json.Serialization;")
+
         # namespace
         use_new_style_namespace = self.options.get("NewStyleNamespace", False)
         namespace = self.options["Namespace"]
@@ -127,8 +129,9 @@ class _CSharpWriter(_TypeWriterProtocol):
             cs_property_name = ut.to_camel_case(
                 property_name, capitalize_first_letter=True
             )
+            output.write(f"{method_indent}[JsonPropertyName(\"{property_name}\")]\n")
             output.write(
-                f"{method_indent}{type_name} {cs_property_name} {{ get; set; }} \n"
+                f"{method_indent}public {type_name}? {cs_property_name} {{ get; set; }}\n"
             )
 
         output.write(f"{self.class_indent}}}\n")
@@ -144,6 +147,8 @@ class _CSharpWriter(_TypeWriterProtocol):
                 return "double"
             case "bool":
                 return "bool"
+            case _:
+                return python_type_name # most likely custom contract type
 
     @staticmethod
     def _map_property_type(td: _TypeDescription) -> str:
